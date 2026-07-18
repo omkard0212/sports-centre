@@ -7,7 +7,9 @@ import { Product } from "../models/product";
 import type { Basket } from "../models/basket";
 
 // Reads from .env.development locally and .env.production on Vercel
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/';
+// Strip trailing slash to avoid double-slash in URLs
+const baseURL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/').replace(/\/+$/, '/');
+axios.defaults.baseURL = baseURL;
 
 const idle = () => new Promise(resolve => setTimeout(resolve, 100));
 const responseBody = (response: AxiosResponse) => response.data;
