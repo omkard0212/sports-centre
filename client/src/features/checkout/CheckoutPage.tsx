@@ -76,7 +76,7 @@ import { ValidationRules } from "./validationRules";
                   address2: data.address2,
                   city: data.city,
                   state: data.state,
-                  zipCode: data.zip,
+                  zipcode: data.zip,   // Fix #3: match backend field name (lowercase 'c')
                   country: data.country,
                 },
                 subTotal: subTotal,

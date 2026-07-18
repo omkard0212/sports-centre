@@ -1,23 +1,37 @@
 import { Container, CssBaseline, Box, Avatar, Typography, TextField, Button, Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useState } from 'react';
+import { FieldValues, useForm } from "react-hook-form";
+import { LoadingButton } from "@mui/lab";
+import { toast } from "react-toastify";
+import agent from "../../app/api/agent";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { signInUser } from "./accountSlice";
 
 export default function RegisterPage(){
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { register, handleSubmit, formState: { isSubmitting, errors, isValid } } = useForm({
+    mode: 'onTouched'
   });
 
-  const handleChange = (e) =>{
-    const {name, value} = e.target;
-    setFormData({...formData, [name]: value});
+  // Fix #5: actually call the register API, store the token, and navigate to store
+  async function submitForm(data: FieldValues) {
+    try {
+      await agent.Account.register(data);
+      // After successful registration, sign in immediately
+      await dispatch(signInUser({ username: data.username, password: data.password }));
+      navigate('/store');
+    } catch (error: any) {
+      if (error === 'Request failed with status code 409') {
+        toast.error('Username already exists. Please choose a different one.');
+      } else {
+        toast.error('Registration failed. Please try again.');
+      }
+      console.error('Registration error:', error);
+    }
   }
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  }
+
     return (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -35,53 +49,48 @@ export default function RegisterPage(){
             <Typography component="h1" variant="h5">
               Register
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={handleSubmit(submitForm)} noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="username"
                 label="Username"
-                name="username"
                 autoComplete="username"
                 autoFocus
-                value={formData.username}
-                onChange={handleChange}
+                {...register('username', { required: 'Username is required' })}
+                error={!!errors.username}
+                helperText={errors?.username?.message as string}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                value={formData.password}
-                onChange={handleChange}
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: { value: 6, message: 'Password must be at least 6 characters' }
+                })}
+                error={!!errors.password}
+                helperText={errors?.password?.message as string}
               />
-              <Button
+              <LoadingButton
+                loading={isSubmitting}
+                disabled={!isValid}
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
                 Register
-              </Button>
+              </LoadingButton>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="/login" variant="body2">
+                  {/* Fix #9: use 'to' instead of 'href' for React Router Link */}
+                  <Link to="/login" variant="body2">
                     Already have an account? Sign in
                   </Link>
                 </Grid>

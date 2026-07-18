@@ -75,15 +75,22 @@ export const accountSlice = createSlice({
         }
     },
     extraReducers:(builder=>{
-        builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled), (state, action)=>{
+        builder.addMatcher(isAnyOf(signInUser.fulfilled), (state, action)=>{
+            // Fix #6: Only show success toast on explicit sign-in, not on fetchCurrentUser (every page load)
             state.user = action.payload;
             state.error = null;
             toast.success('Sign in successful');
         });
+        builder.addMatcher(isAnyOf(fetchCurrentUser.fulfilled), (state, action)=>{
+            // Restore user from localStorage silently — no toast
+            state.user = action.payload;
+            state.error = null;
+        });
         builder.addMatcher(isAnyOf(signInUser.rejected, fetchCurrentUser.rejected, logoutUser.fulfilled), (state, action)=>{
             const payload = action.payload as string | null;
             state.error = payload;
-            toast.success('Sign in failed. Please try again');
+            // Fix #7: use toast.error instead of toast.success for failures
+            toast.error('Sign in failed. Please try again');
         });
     })
 })

@@ -6,10 +6,27 @@ import { Dispatch } from "redux";
 import { Product } from "../models/product";
 import { Basket } from "../models/basket";
 
-axios.defaults.baseURL ='http://localhost:8081/api/';
+// Reads from .env.development locally and .env.production on Vercel
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/';
 
 const idle = () => new Promise(resolve => setTimeout(resolve, 100));
 const responseBody = (response: AxiosResponse) => response.data;
+
+// Fix #1: Attach JWT token to every outgoing request
+axios.interceptors.request.use(config => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            if (user?.token) {
+                config.headers.Authorization = `Bearer ${user.token}`;
+            }
+        } catch {
+            // Invalid JSON in localStorage — ignore
+        }
+    }
+    return config;
+});
 
 axios.interceptors.response.use(async response=>{
     await idle();
@@ -35,11 +52,11 @@ const requests = {
     get: (url: string) => axios.get(url).then(responseBody),
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) =>axios.put(url, body).then(responseBody),
-    delete: (url: string) =>axios.put(url).then(responseBody)
+    delete: (url: string) =>axios.delete(url).then(responseBody)
 }
 
 const Store = {
-    apiUrl: 'http://localhost:8081/api/products',
+    // Fix #12: removed redundant hardcoded apiUrl — all requests go through axios.defaults.baseURL
     list:(page: number, size: number, brandId?: number, typeId?: number, url?: string)=> {
       let requestUrl = url || `products?page=${page-1}&size=${size}`;
       if(brandId!==undefined){
@@ -118,7 +135,8 @@ const Basket = {
 }
 
 const Account = {
-  login: (values:any) =>requests.post('auth/login', values)
+  login: (values: any) => requests.post('auth/login', values),
+  register: (values: any) => requests.post('auth/register', values)  // Fix #5: register API call
 }
 
 const Orders ={

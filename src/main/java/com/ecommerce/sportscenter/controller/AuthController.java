@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,11 +21,14 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager manager;
     private final JwtHelper jwtHelper;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserDetailsService userDetailsService, AuthenticationManager manager, JwtHelper jwtHelper) {
+    public AuthController(UserDetailsService userDetailsService, AuthenticationManager manager,
+                          JwtHelper jwtHelper, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.manager = manager;
         this.jwtHelper = jwtHelper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
@@ -35,6 +41,33 @@ public class AuthController {
                 .token(token)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Fix #5: register endpoint so the Register page is functional
+    @PostMapping("/register")
+    public ResponseEntity<JwtResponse> register(@RequestBody JwtRequest request){
+        if (userDetailsService instanceof InMemoryUserDetailsManager manager) {
+            try {
+                // Check if user already exists
+                userDetailsService.loadUserByUsername(request.getUsername());
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            } catch (Exception ignored) {
+                // User does not exist — safe to create
+            }
+            UserDetails newUser = User.builder()
+                    .username(request.getUsername())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .roles("user")
+                    .build();
+            manager.createUser(newUser);
+            String token = jwtHelper.generateToken(newUser);
+            JwtResponse response = JwtResponse.builder()
+                    .username(newUser.getUsername())
+                    .token(token)
+                    .build();
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     @GetMapping("/user")

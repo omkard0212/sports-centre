@@ -23,3 +23,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+# Fix #10: JWT secret moved out of source code and into config
+jwt:
+  secret: f27dacd186810e78c0fd8ba65ecf3f1524ff087c5e86773d5172d424b3fd201f

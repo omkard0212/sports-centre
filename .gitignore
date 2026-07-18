@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Frontend env files (keep .env.example, ignore real values) ###
+client/.env.local
+client/.env.development
+client/.env.production

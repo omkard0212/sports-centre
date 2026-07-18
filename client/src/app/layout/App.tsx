@@ -28,7 +28,7 @@ function App() {
     }else{
       setLoading(false);
     }
-  })
+  }, [])  // Fix #4: empty dependency array — run only on mount
 
   const theme = createTheme({
     palette:{
