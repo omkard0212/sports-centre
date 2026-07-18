@@ -6,7 +6,12 @@ WORKDIR /app
 COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw .
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+
+# Fix Windows line endings (CRLF -> LF) so mvnw runs on Linux
+RUN sed -i 's/\r//' mvnw && chmod +x mvnw
+
+# Download dependencies (cached layer — only re-runs if pom.xml changes)
+RUN ./mvnw dependency:resolve -B
 
 # Copy source and build the JAR (skip tests for faster build)
 COPY src ./src
