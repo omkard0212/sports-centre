@@ -1,92 +1,189 @@
-# Building FullStack E-Commerce App using SpringBoot & React
+# Sports Center — Full Stack E-Commerce App
 
-## Introduction:
+A full-stack sports equipment e-commerce application built with **Spring Boot 3** (Java 21) on the backend and **React 18 + TypeScript** on the frontend.
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/3e5873dd-42f8-4576-8961-b95784b91b4f)
+**Live Demo:** [sports-centre.vercel.app](https://sports-centre.vercel.app) &nbsp;|&nbsp; **API:** [sports-centre.onrender.com](https://sports-centre.onrender.com)
 
-GitHub:- https://github.com/rahulsahay19/Java-React-FullStack
+---
 
-Enroll here:- https://www.udemy.com/course/building-fullstack-e-commerce-app-using-springboot-react/?couponCode=OFFER-PRICE
+## Tech Stack
 
-Introduction:
-Are you ready to embark on a transformative journey into the world of full-stack e-commerce development? 🔥 Brace yourself for an exhilarating adventure, where you’ll harness the dynamic duo of Java21 and SpringBoot 3.2.3 to craft cutting-edge online stores that redefine the digital shopping experience! 🌐💻
+### Backend
+| | |
+|---|---|
+| Language | Java 21 |
+| Framework | Spring Boot 3.2.3 |
+| Security | Spring Security + JWT (JJWT 0.11.5) |
+| Database | MySQL 8 (products, orders) |
+| Cache / Basket | Redis |
+| ORM | Spring Data JPA + Hibernate |
+| Mapping | MapStruct |
+| API Docs | SpringDoc OpenAPI (Swagger UI) |
+| Build | Maven |
+| Container | Docker (multi-stage build) |
 
-🌟 Java21: The Future of Java
-Java21, the latest incarnation of the Java programming language, has taken the tech world by storm. With its enhanced performance, feature-rich capabilities, and improved developer productivity, it’s the perfect foundation for your journey into e-commerce mastery. 💪💼
+### Frontend
+| | |
+|---|---|
+| Language | TypeScript |
+| Framework | React 18 + Vite |
+| UI Library | Material UI v5 |
+| State | Redux Toolkit |
+| Routing | React Router v6 |
+| Forms | React Hook Form + Yup |
+| HTTP | Axios |
+| Notifications | React Toastify |
 
-🚀 SpringBoot 3.2.3: Turbocharge Your Development
-SpringBoot 3.2.3, the latest iteration of the industry-favorite SpringBoot framework, is your turbocharger for full-stack e-commerce development. Its robust back-end capabilities, seamless integration with Java21, and extensive libraries make it the go-to choice for building scalable and secure e-commerce platforms. 🌐🔒
+---
 
-Welcome to “Building FullStack E-Commerce App using SpringBoot & React” — an immersive learning experience 📚✨ meticulously crafted for developers eager to master the art of full-stack e-commerce application development with SpringBoot and React.
+## Features
 
-Embark on a transformative journey 🚀 where you’ll harness the powerful synergy of SpringBoot’s robust back-end capabilities and React’s dynamic front-end framework. Over the course of 17+ hours, you’ll transition from grasping core concepts 🧩 to applying industry-standard design patterns.
+- **Product catalogue** — paginated, filterable by brand & type, searchable by keyword, sortable A–Z / Z–A
+- **Basket** — localStorage-first with Redis sync, persistent across sessions
+- **Authentication** — JWT login & register, token attached to every request
+- **Checkout** — multi-step form (shipping address → review → payment), creates order in MySQL
+- **Orders** — view all past orders with date, total and status
+- **Dark / Light mode** toggle
+- **Responsive** — works on mobile, tablet and desktop
+- **Home page** — auto-sliding hero banner, category cards, brand showcase, CTA section
+- **Contact page** — enquiry form, store info cards, embedded map
 
-Your comprehensive curriculum includes:
-- 🧠 Mastery of SpringBoot essentials and advanced features
-- 📦 Efficient data access with Spring Data JPA
-- 🔐 Elegant implementation using Specification Pattern
-- 🌐 Mapping Via Builder pattern and MapStruct Libraries
-- 🔄 Data Integration using MySql & Redis via Docker
-- 🔒 Secure user authentication and authorization with Spring Security
-- 🌐 Creating RESTful APIs with Spring Boot for seamless data communication
-- 💻 React best practices, including redux, thunk api, and many more
-- 🎨 Styling with Material UI, roboto, styled, and many more for a polished app.
+---
 
-Whether you’re an intern, junior developer, senior developer, tech lead, architect, or senior architect, this course offers a tailored path 🛤️ to elevate your expertise. You’ll engage in hands-on projects 🛠️, reinforce your learning with quizzes 📝, and stay updated with yearly content refreshes 🔄.
+## Project Structure
 
-Dive into 15 comprehensive sections, spanning over 206+ videos, all geared towards a pragmatic and thorough understanding of full-stack e-commerce development. Plus, enjoy lifetime access 🎫 to all course materials and future updates.
+```
+sports-centre/
+├── src/                          # Spring Boot backend
+│   └── main/java/com/ecommerce/sportscenter/
+│       ├── config/               # Security, CORS, user config
+│       ├── controller/           # REST controllers
+│       ├── entity/               # JPA + Redis entities
+│       ├── model/                # DTOs / response objects
+│       ├── repository/           # Spring Data repositories
+│       ├── security/             # JWT filter, helper, entry point
+│       └── service/              # Business logic
+├── src/main/resources/
+│   ├── application.yaml          # Local config
+│   └── application-prod.yaml     # Production config (reads env vars)
+├── client/                       # React frontend
+│   ├── src/
+│   │   ├── app/                  # Axios, layout, store, router, models
+│   │   └── features/             # account, basket, catalog, checkout, orders, home, contact
+│   ├── .env.example              # Environment variable template
+│   └── vercel.json               # SPA rewrite rule for Vercel
+├── docker/
+│   └── docker-compose.yml        # MySQL + Redis for local dev
+└── Dockerfile                    # Multi-stage production build
+```
 
-Who Should Enroll?
-- 🎓 Interns: Build a solid foundation for a tech career by applying academic knowledge to real-world projects.
-- 👨‍💻 Junior Developers: Upgrade your skill set with advanced full-stack e-commerce development practices.
-- 👨‍💼 Senior Developers: Lead the way in e-commerce application development.
-- 🚀 Tech Leads: Direct cutting-edge projects with confidence, leveraging SpringBoot and React.
-- 🏗️ Architects: Incorporate insights into your design strategies for innovative, scalable e-commerce solutions.
-- 🌟 Senior Architects: Pioneer the integration of robust architecture, leading high-impact projects with expertise.
+---
 
-Course Stats: What You’ll Get
-- 🚀 Fast-Track Your Learning: Dive into a meticulously crafted course designed for maximum engagement and superior learning outcomes.
-- 📚 15 Engaging Sections: Traverse the depths of full-stack e-commerce development, from fundamentals to advanced design patterns and beyond.
-- 🎥 206+ In-Depth Videos: Each video is a stepping stone, providing clear explanations, step-by-step instructions, and real-world applications.
-- ⏰ 17+ Hours of Content: Immerse yourself in a comprehensive curriculum that fits your schedule, accessible anytime, anywhere.
-- 🔄 Yearly Updates: Stay in sync with the latest trends and best practices in SpringBoot and React as technology evolves.
-- 🎫 Lifetime Access: Your one-time enrollment grants you unrestricted access to all current and future course content — forever.
+## Getting Started (Local)
 
-GitHub:- https://github.com/rahulsahay19/Java-React-FullStack
+### Prerequisites
+- Java 21
+- Node.js 18+
+- Docker Desktop
 
-Enroll here:- https://www.udemy.com/course/building-fullstack-e-commerce-app-using-springboot-react/?couponCode=OFFER-PRICE
+### 1. Start MySQL and Redis
 
-Solution Walkthrough:
+```bash
+cd docker
+docker-compose up -d
+```
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/110f109d-c2ad-44ca-a487-f22d1f507239)
+This spins up MySQL on port `3306` and Redis on port `6379`, and seeds the database with products.
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/c1adee13-5232-4a96-b804-736122f21190)
+### 2. Run the backend
 
-## Application Flow:
+```bash
+./mvnw spring-boot:run
+```
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/cfbc1499-873f-45ec-a7ed-4cb4dcac8efe)
+Backend starts on **http://localhost:8081**  
+Swagger UI available at **http://localhost:8081/swagger-ui/index.html**
 
-## Add To Cart:
+### 3. Run the frontend
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/44e21af9-82eb-46c5-84c8-33e2f0824073)
+```bash
+cd client
+npm install
+npm run dev
+```
 
-## Basket Page:
+Frontend starts on **http://localhost:3000**
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/4f8853a2-a65c-418d-968e-3870392e277d)
+### Default login credentials
 
+```
+Username: rahul
+Password: Password
+```
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/ca65abd2-c58b-480d-a4b8-9f4707a11df1)
+---
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/568578a3-df7d-4aa8-93b7-0781e9ff0633)
+## Environment Variables
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/094c8d92-0b20-4f11-85b4-a7b2a6c1e531)
+### Frontend (`client/.env.development`)
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/9c83b0cf-1552-42e1-bdfd-b9354704e801)
+```env
+VITE_API_BASE_URL=http://localhost:8081/api/
+```
 
-![image](https://github.com/rahulsahay19/Blog-Images/assets/3886381/aea25748-d100-42f3-a9f9-3eae8b0a53e2)
+Copy `client/.env.example` to get started.
 
-GitHub:- https://github.com/rahulsahay19/Java-React-FullStack
+### Backend (`application-prod.yaml` / Render)
 
-Enroll here:- https://www.udemy.com/course/building-fullstack-e-commerce-app-using-springboot-react/?couponCode=OFFER-PRICE
+| Variable | Description |
+|---|---|
+| `SPRING_PROFILES_ACTIVE` | Set to `prod` in production |
+| `MYSQL_URL` | JDBC connection string |
+| `MYSQL_USER` | Database username |
+| `MYSQL_PASSWORD` | Database password |
+| `REDIS_URL` | Redis connection URL |
+| `JWT_SECRET` | Secret key for signing JWTs |
+| `FRONTEND_URL` | Your Vercel frontend URL (for CORS) |
 
-Thanks for Joining me. Happy Learning.
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/login` | Login, returns JWT |
+| `POST` | `/api/auth/register` | Register new user |
+| `GET` | `/api/products` | List products (page, size, brandId, typeId, keyword, sort, order) |
+| `GET` | `/api/products/{id}` | Get product by ID |
+| `GET` | `/api/products/brands` | List all brands |
+| `GET` | `/api/products/types` | List all types |
+| `GET` | `/api/baskets/{id}` | Get basket by ID |
+| `POST` | `/api/baskets` | Create / update basket |
+| `DELETE` | `/api/baskets/{id}` | Delete basket |
+| `GET` | `/api/orders` | List all orders |
+| `GET` | `/api/orders/{id}` | Get order by ID |
+| `POST` | `/api/orders` | Create order from basket |
+| `DELETE` | `/api/orders/{id}` | Delete order |
+
+---
+
+## Deployment
+
+### Frontend → Vercel
+
+1. Import repo at [vercel.com](https://vercel.com)
+2. Set **Root Directory** to `client`, framework to **Vite**
+3. Add env variable: `VITE_API_BASE_URL=https://your-render-url.onrender.com/api/`
+4. Deploy
+
+### Backend → Render
+
+1. New **Web Service** → connect repo → set environment to **Docker**
+2. Add all environment variables listed above
+3. Deploy — Render builds from the `Dockerfile` at the repo root
+
+---
+
+## Author
+
+**Omkar** — [github.com/omkard0212](https://github.com/omkard0212)
