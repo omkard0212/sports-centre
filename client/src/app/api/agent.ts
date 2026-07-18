@@ -6,10 +6,9 @@ import { Dispatch } from "redux";
 import { Product } from "../models/product";
 import type { Basket } from "../models/basket";
 
-// Reads from .env.development locally and .env.production on Vercel
-// Strip trailing slash to avoid double-slash in URLs
-const baseURL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/').replace(/\/+$/, '/');
-axios.defaults.baseURL = baseURL;
+// Normalize baseURL — ensure exactly one trailing slash
+const rawBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api';
+axios.defaults.baseURL = rawBase.replace(/\/+$/, '') + '/';
 
 const idle = () => new Promise(resolve => setTimeout(resolve, 100));
 const responseBody = (response: AxiosResponse) => response.data;
