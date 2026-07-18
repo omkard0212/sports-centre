@@ -2,20 +2,13 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom first (layer-cache dependencies)
+# Copy pom and download dependencies first (cached layer)
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-
-# Fix Windows line endings (CRLF -> LF) so mvnw runs on Linux
-RUN sed -i 's/\r//' mvnw && chmod +x mvnw
-
-# Download dependencies (cached layer — only re-runs if pom.xml changes)
-RUN ./mvnw dependency:resolve -B
+RUN mvn dependency:resolve -B -q
 
 # Copy source and build the JAR (skip tests for faster build)
 COPY src ./src
-RUN ./mvnw package -DskipTests -B
+RUN mvn package -DskipTests -B
 
 # ── Stage 2: Run ────────────────────────────────────────────────────────────
 FROM eclipse-temurin:21-jre-alpine
