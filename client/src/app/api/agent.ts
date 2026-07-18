@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import basketService from "./basketService";
 import { Dispatch } from "redux";
 import { Product } from "../models/product";
-import { Basket } from "../models/basket";
+import type { Basket } from "../models/basket";
 
 // Reads from .env.development locally and .env.production on Vercel
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api/';

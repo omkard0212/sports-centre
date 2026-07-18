@@ -1,4 +1,4 @@
-import { Container, CssBaseline, Box, Avatar, Typography, TextField, Button, Grid } from "@mui/material";
+import { Container, CssBaseline, Box, Avatar, Typography, TextField, Grid } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { FieldValues, useForm } from "react-hook-form";
@@ -90,7 +90,7 @@ export default function RegisterPage(){
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   {/* Fix #9: use 'to' instead of 'href' for React Router Link */}
-                  <Link to="/login" variant="body2">
+                  <Link to="/login" style={{ fontSize: '0.875rem' }}>
                     Already have an account? Sign in
                   </Link>
                 </Grid>

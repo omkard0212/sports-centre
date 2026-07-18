@@ -11,10 +11,10 @@ import {
   import AddressForm from "./AddressForm";
   import PaymentForm from "./PaymentForm";
   import Review from "./Review";
-  import { FieldValues, FormProvider, useForm } from "react-hook-form";
+  import { FormProvider, useForm } from "react-hook-form";
   import { yupResolver } from "@hookform/resolvers/yup";
   
-  import { Basket, BasketItem } from "../../app/models/basket";
+  import { BasketItem } from "../../app/models/basket";
   import { toast } from "react-toastify";
   import agent from "../../app/api/agent";
   import { useAppDispatch } from "../../app/store/configureStore";
@@ -40,7 +40,7 @@ import { ValidationRules } from "./validationRules";
   export default function CheckoutPage() {
     const [activeStep, setActiveStep] = useState(0);
     const [orderNumber, setOrderNumber] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [_loading, setLoading] = useState(false);
     const currentValdationRule = ValidationRules[activeStep];
     const methods = useForm({
       mode: "all",
