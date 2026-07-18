@@ -52,7 +52,12 @@ export default function Catalog() {
         setBrands(brandsRes);
         setTypes(typesRes);
       })
-      .catch((error) => console.error("Failed to load filters:", error));
+      .catch((error) => {
+        console.error("Failed to load filters:", error);
+        // Still trigger product fetch even if filters fail
+        setBrands([{ id: 0, name: 'All' }]);
+        setTypes([{ id: 0, name: 'All' }]);
+      });
   }, []);
 
   // ── Core fetch — runs whenever any filter or page changes ──────────────────
@@ -93,7 +98,11 @@ export default function Catalog() {
           setProducts(res.content);
           setTotalItems(res.totalElements);
         })
-        .catch((error) => console.error("Failed to load products:", error))
+        .catch((error) => {
+          console.error("Failed to load products:", error);
+          setProducts([]);
+          setTotalItems(0);
+        })
         .finally(() => setLoading(false));
     },
     []
@@ -101,8 +110,8 @@ export default function Catalog() {
 
   // ── Re-fetch whenever any filter or page changes ───────────────────────────
   useEffect(() => {
-    // Wait until brands/types are loaded before fetching (avoids double fetch on mount)
-    if (brands.length === 0 && types.length === 0) return;
+    // Wait until brands/types are loaded (either successfully or with fallback)
+    if (brands.length === 0 || types.length === 0) return;
     fetchProducts(currentPage, selectedSort, selectedBrand, selectedType, searchTerm, brands, types);
   }, [currentPage, selectedSort, selectedBrand, selectedType, searchTerm, brands, types, fetchProducts]);
 
